@@ -51,7 +51,7 @@ function SchoolDetails() {
             </table>
           </div>
           <div className="mt-4">
-            <Link to="/schools" className="text-sm text-white bg-slate-500 hover:bg-slate-600 rounded px-4 py-2">Back to Schools</Link>
+            <Link to="/schools" className="text-sm text-white bg-slate-400 hover:bg-slate-600 rounded px-4 py-2">Back to Schools</Link>
           </div>
         </>
       )}
