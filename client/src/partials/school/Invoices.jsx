@@ -1,6 +1,16 @@
 import React, { useState } from 'react';
-
+import { useCreateInvoiceMutation } from '../../redux/api/invoiceApiSlice';
+import { useGetSchoolsQuery } from '../../redux/api/schoolApiSlice';
+import { useAllnvoiceQuery } from '../../redux/api/invoiceApiSlice';
 function  Invoices() {
+
+  const [createInvoice, {isLoading,isError,isSuccess}]= useCreateInvoiceMutation()
+  const { data: schools, isSchoolLoading, isSchoolError } = useGetSchoolsQuery();
+  const [selectedSchool, setSelectedSchool] = useState('');
+  const [items, setItems] = useState('');
+  const [dueDate, setDueDate] = useState('');
+  const [amount, setAmount] = useState('');
+  const [paymentAmount, setPaymentAmount] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState('view'); // 'view', 'create', 'edit', 'collect'
   const [selectedInvoice, setSelectedInvoice] = useState(null);
@@ -29,54 +39,27 @@ function  Invoices() {
     setFilter(e.target.value);
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
-    if (modalMode === 'create') {
-      const newInvoice = {
-        id: invoices.length + 1,
-        invoiceNumber: `INV00${invoices.length + 1}`,
-        school: e.target.school.value,
+    try {
+      const newInvoiceData = {
+        school: selectedSchool,
         items: e.target.items.value,
+        dueDate: e.target.dueDate.value,
         amount: parseFloat(e.target.amount.value),
         paidAmount: 0,
-        creationDate: new Date().toISOString().split('T')[0],
-        dueDate: e.target.dueDate.value,
-        status: 'Pending',
         balance: parseFloat(e.target.amount.value),
       };
-      setInvoices([...invoices, newInvoice]);
-    } else if (modalMode === 'edit') {
-      setInvoices(
-        invoices.map((invoice) =>
-          invoice.id === selectedInvoice.id
-            ? {
-                ...invoice,
-                school: e.target.school.value,
-                items: e.target.items.value,
-                amount: parseFloat(e.target.amount.value),
-                dueDate: e.target.dueDate.value,
-                balance: parseFloat(e.target.amount.value) - invoice.paidAmount,
-              }
-            : invoice
-        )
-      );
-    } else if (modalMode === 'collect') {
-      const paymentAmount = parseFloat(e.target.paymentAmount.value);
-      setInvoices(
-        invoices.map((invoice) =>
-          invoice.id === selectedInvoice.id
-            ? {
-                ...invoice,
-                paidAmount: invoice.paidAmount + paymentAmount,
-                balance: invoice.balance - paymentAmount,
-                status: invoice.balance - paymentAmount <= 0 ? 'Completed' : 'Pending',
-              }
-            : invoice
-        )
-      );
+      const response = await createInvoice(newInvoiceData).unwrap();
+      // Handle success response
+      console.log('Invoice created:', response);
+      closeModal();
+    } catch (error) {
+      // Handle error
+      console.error('Error creating invoice:', error);
     }
-    closeModal();
   };
+  
 
   const handleDeleteInvoice = (id) => {
     setInvoices(invoices.filter((invoice) => invoice.id !== id));
@@ -94,7 +77,16 @@ function  Invoices() {
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return diffDays;
   };
-
+  // Render school options
+  const renderSchoolOptions = () => {
+    if (isSchoolError) return <option>Loading...</option>;
+    if (isSchoolError) return <option>Error loading schools</option>;
+    return schools.map((school) => (
+      <option key={school._id} value={school._id}>
+        {school.name}
+      </option>
+    ));
+  };
   return (
     <div className="col-span-full xl:col-span-8 bg-white dark:bg-slate-800 shadow-lg rounded-sm border border-slate-200 dark:border-slate-700">
       <header className="px-5 py-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center">
@@ -231,48 +223,54 @@ function  Invoices() {
             </h2>
             <form onSubmit={handleFormSubmit}>
               {(modalMode === 'create' || modalMode === 'edit') && (
-                <>
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-slate-800 dark:text-slate-100">School</label>
-                    <input
-                      type="text"
-                      name="school"
-                      defaultValue={modalMode === 'edit' ? selectedInvoice.school : ''}
-                      className="mt-1 p-2 block w-full bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded"
-                      required
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-slate-800 dark:text-slate-100">Items</label>
-                    <input
-                      type="text"
-                      name="items"
-                      defaultValue={modalMode === 'edit' ? selectedInvoice.items : ''}
-                      className="mt-1 p-2 block w-full bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded"
-                      required
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-slate-800 dark:text-slate-100">Due Date</label>
-                    <input
-                      type="date"
-                      name="dueDate"
-                      defaultValue={modalMode === 'edit' ? selectedInvoice.dueDate : ''}
-                      className="mt-1 p-2 block w-full bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded"
-                      required
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-slate-800 dark:text-slate-100">Amount</label>
-                    <input
-                      type="number"
-                      name="amount"
-                      defaultValue={modalMode === 'edit' ? selectedInvoice.amount : ''}
-                      className="mt-1 p-2 block w-full bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded"
-                      required
-                    />
-                  </div>
-                </>
+               
+               <>
+                <div className="mb-4">
+    <label className="block text-sm font-medium text-slate-800 dark:text-slate-100">School</label>
+    <select
+      name="school"
+      value={selectedSchool}
+      onChange={(e) => setSelectedSchool(e.target.value)}
+      className="mt-1 p-2 block w-full bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded"
+      required
+    >
+      <option value="">Select School</option>
+      {renderSchoolOptions()}
+    </select>
+  </div>
+  <div className="mb-4">
+    <label className="block text-sm font-medium text-slate-800 dark:text-slate-100">Items</label>
+    <input
+      type="text"
+      name="items"
+      value={items}
+      onChange={(e) => setItems(e.target.value)}
+      className="mt-1 p-2 block w-full bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded"
+      required
+    />
+  </div>
+  <div className="mb-4">
+    <label className="block text-sm font-medium text-slate-800 dark:text-slate-100">Due Date</label>
+    <input
+      type="date"
+      name="dueDate"
+      value={dueDate}
+      onChange={(e) => setDueDate(e.target.value)}
+      className="mt-1 p-2 block w-full bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded"
+      required
+    />
+  </div>
+  <div className="mb-4">
+    <label className="block text-sm font-medium text-slate-800 dark:text-slate-100">Amount</label>
+    <input
+      type="number"
+      name="amount"
+      value={amount}
+      onChange={(e) => setAmount(e.target.value)}
+      className="mt-1 p-2 block w-full bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded"
+      required
+    />
+  </div></>
               )}
               {modalMode === 'collect' && (
                 <>

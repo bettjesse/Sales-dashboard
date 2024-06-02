@@ -32,8 +32,8 @@ function App() {
       <Routes>
         <Route exact path="/" element={<Dashboard />} />
         <Route exact path="/schools" element={<SchoolManagement/>} />
-        <Route exact path="/schools/1" element={<SchoolDetail/>} />
-        <Route exact path="/schools/2" element={<SchoolDetail/>} />
+        <Route exact path="/schools/:id" element={<SchoolDetail/>} />
+      
         <Route exact path="/invoices" element={<InvoicePage/>} />
         <Route exact path="/collections" element={<Collections/>} />
 

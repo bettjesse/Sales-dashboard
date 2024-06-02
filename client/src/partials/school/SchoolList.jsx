@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useGetSchoolsQuery } from '../../redux/api/schoolApiSlice';
 
 function SchoolList() {
-  const schools = [
-    { id: 1, name: 'Greenwood High', type: 'Secondary', product: 'Zeraki Analytics', county: 'Nairobi', registrationDate: '2020-01-01', contact: '123-456-7890', balance: 'ksh5000' },
-    { id: 2, name: 'Sunnydale Elementary', type: 'Primary', product: 'Zeraki timetable', county: 'Kajiado', registrationDate: '2019-05-15', contact: '987-654-3210', balance: 'ksh36995' },
-    // Add more schools as needed
-  ];
+  const { data: schools, isLoading, isError } = useGetSchoolsQuery();
+
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error fetching schools</div>;
 
   return (
     <div className="bg-white dark:bg-slate-800 shadow-lg rounded-sm border border-slate-200 dark:border-slate-700">
@@ -27,14 +27,14 @@ function SchoolList() {
           </thead>
           <tbody className="text-sm font-medium divide-y divide-slate-100 dark:divide-slate-700">
             {schools.map(school => (
-              <tr key={school.id}>
+              <tr key={school._id}>
                 <td className="p-2">{school.name}</td>
                 <td className="p-2">{school.type}</td>
                 <td className="p-2">{school.product}</td>
                 <td className="p-2">{school.county}</td>
-                <td className="p-2">{school.balance}</td>
+                <td className="p-2">{school.schoolBalance}</td>
                 <td className="p-2">
-                  <Link to={`/schools/${school.id}`} className="text-sm text-white bg-emerald-500 hover:bg-emerald-600 rounded px-4 py-2 inline-block">View Details</Link>
+                  <Link to={`/schools/${school._id}`} className="text-sm text-white bg-emerald-500 hover:bg-emerald-600 rounded px-4 py-2 inline-block">View Details</Link>
                 </td>
               </tr>
             ))}
