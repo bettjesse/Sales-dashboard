@@ -31,20 +31,20 @@ function SchoolDetails() {
           </div>
           <h3 className="font-semibold text-slate-800 dark:text-slate-100 text-xl mb-2">Invoices</h3>
           <div className="overflow-x-auto mb-4">
-            <table className="table-auto w-full dark:text-slate-300">
-              <thead className="text-xs uppercase text-slate-400 dark:text-slate-500 bg-slate-50 dark:bg-slate-700 dark:bg-opacity-50 rounded-sm">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
                 <tr>
-                  <th className="p-2">Invoice Number</th>
-                  <th className="p-2">Amount</th>
-                  <th className="p-2">Due Date</th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Invoice Number</th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Due Date</th>
                 </tr>
               </thead>
-              <tbody className="text-sm font-medium divide-y divide-slate-100 dark:divide-slate-700">
+              <tbody className="bg-white divide-y divide-gray-200">
                 {school.invoices.map(invoice => (
                   <tr key={invoice._id}>
-                    <td className="p-2">{invoice.invoiceNumber}</td>
-                    <td className="p-2">{invoice.amount}</td>
-                    <td className="p-2">{formatDate(invoice.dueDate)}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{invoice.invoiceNumber}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{invoice.amount}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{formatDate(invoice.dueDate)}</td>
                   </tr>
                 ))}
               </tbody>
