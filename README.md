@@ -1,7 +1,7 @@
 # Zeraki Sales Management Dashboard
 
 Zeraki Sales Management Dashboard is a comprehensive platform designed for sales management teams within Zeraki. It provides tools and features to streamline sales processes, manage invoices, track sales performance, and generate insightful reports.
-![Dashboard Overview](images/dashboard-overview.jpg)
+![Dashboard Overview](/images/dashboard-overview.jpg)
 
 ## Features
 
