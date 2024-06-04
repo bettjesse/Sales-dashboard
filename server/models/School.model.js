@@ -6,10 +6,10 @@ const SchoolSchema = new Schema({
   name: {
     type: String,
     required: true,
-    unique: true,
   },
   type: {
     type: String,
+    enum: ['Primary', 'Secondary', 'IGCSE'],
     required: true,
   },
   product: {
@@ -22,21 +22,17 @@ const SchoolSchema = new Schema({
   },
   registrationDate: {
     type: Date,
-    required: true,
+    default: Date.now,
   },
-  address: {
-    type: String,
-    required: true,
-  },
-  contactEmail: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  contactPhone: {
-    type: String,
-    required: true,
-    unique: true,
+  contactInformation: {
+    phone: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+    },
   },
   invoices: [{
     type: Schema.Types.ObjectId,
@@ -46,9 +42,9 @@ const SchoolSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Collection',
   }],
-  createdAt: {
-    type: Date,
-    default: Date.now,
+  balance: {
+    type: Number,
+    default: 0,
   },
 });
 

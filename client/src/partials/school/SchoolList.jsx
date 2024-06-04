@@ -21,6 +21,8 @@ function SchoolList() {
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">County</th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Registration Date</th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact Information</th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Balance</th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
             </tr>
@@ -32,7 +34,9 @@ function SchoolList() {
                 <td className="px-6 py-4 whitespace-nowrap">{school.type}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{school.product}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{school.county}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{school.schoolBalance}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{new Date(school.registrationDate).toLocaleDateString()}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{school.contactInformation.phone} / {school.contactInformation.email}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{school.balance}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <Link to={`/schools/${school._id}`} className="text-sm font-medium text-indigo-600 hover:text-indigo-900">View Details</Link>
                 </td>

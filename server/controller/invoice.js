@@ -34,13 +34,21 @@ export async function listAllInvoices(req, res) {
 // Controller to create a new invoice
 
 
+
+
 export async function createInvoice(req, res) {
   try {
     const { school, items, dueDate, amount, paidAmount, balance, status } = req.body;
 
     // Generate a unique invoice number
-    const lastInvoice = await Invoice.findOne().sort({ createdAt: -1 });
-    const invoiceNumber = lastInvoice ? `INV${parseInt(lastInvoice.invoiceNumber.replace('INV', '')) + 1}` : 'INV1';
+    const lastInvoice = await Invoice.findOne().sort({ creationDate: -1 });
+    let invoiceNumber;
+    if (lastInvoice) {
+      const lastInvoiceNumber = parseInt(lastInvoice.invoiceNumber.replace('INV', ''));
+      invoiceNumber = `INV${lastInvoiceNumber + 1}`;
+    } else {
+      invoiceNumber = 'INV1';
+    }
 
     // Create a new invoice instance
     const invoice = new Invoice({
@@ -51,18 +59,17 @@ export async function createInvoice(req, res) {
       amount,
       paidAmount,
       balance,
-      status
+      status,
     });
 
     // Save the new invoice to the database
     const savedInvoice = await invoice.save();
 
-    // Update the school to include the new invoice ID
-    await School.findByIdAndUpdate(
-      school,
-      { $push: { invoices: savedInvoice._id } },
-      { new: true, useFindAndModify: false }
-    );
+    // Update the school to include the new invoice ID and recalculate balance
+    const schoolDoc = await School.findById(school);
+    schoolDoc.invoices.push(savedInvoice._id);
+    schoolDoc.balance += amount; // Increase the balance by the invoice amount
+    await schoolDoc.save();
 
     return res.status(201).send({
       message: 'Invoice created successfully',
@@ -119,7 +126,46 @@ export async function deleteInvoice(req, res) {
 
 
 
+export async function getSchoolById(req, res) {
+  try {
+    const { schoolId } = req.params;
+
+    console.log(`Looking for school with ID: ${schoolId}`);
+
+    // Find the school by ID
+    const school = await School.findById(schoolId).exec();
+
+    if (!school) {
+      console.error(`School not found with ID: ${schoolId}`);
+      return res.status(404).send({ error: 'School not found' });
+    }
+
+    const schoolDetails = {
+      name: school.name,
+      type: school.type,
+      product: school.product,
+      county: school.county,
+      registrationDate: school.registrationDate,
+      contactInformation: {
+        phone: school.contactInformation.phone,
+        email: school.contactInformation.email,
+      },
+      balance: school.balance,
+    };
+
+    return res.status(200).send(schoolDetails);
+  } catch (error) {
+    console.error('Error fetching school:', error);
+    return res.status(500).send({ error: 'Internal server error' });
+  }
+}
+
+
+
+
 // Controller to create a new school
+
+
 
 
 export async function createSchool(req, res) {
@@ -131,8 +177,7 @@ export async function createSchool(req, res) {
       county,
       registrationDate,
       address,
-      contactEmail,
-      contactPhone,
+      contactInformation: { email, phone }
     } = req.body;
 
     // Create a new school instance
@@ -142,9 +187,11 @@ export async function createSchool(req, res) {
       product,
       county,
       registrationDate,
+      contactInformation: {
+        email,
+        phone,
+      },
       address,
-      contactEmail,
-      contactPhone,
     });
 
     // Save the new school to the database
@@ -165,61 +212,8 @@ export async function createSchool(req, res) {
 
 
 
-export async function getSchoolById(req, res) {
-  try {
-    const { id } = req.params;
 
-    // Find the school by its ID and populate the invoices and collections fields
-    const school = await School.findById(id).populate('invoices collections');
 
-    // If no school is found, return a 404 error
-    if (!school) {
-      return res.status(404).json({ message: 'School not found' });
-    }
-
-    // Initialize totals for invoiced and collected amounts
-    let totalInvoicedAmount = 0;
-    let totalCollectedAmount = 0;
-
-    // Sum the amounts from the invoices
-    if (school.invoices && school.invoices.length > 0) {
-      school.invoices.forEach(invoice => {
-        totalInvoicedAmount += invoice.amount;
-      });
-    }
-
-    // Sum the amounts from the collections
-    if (school.collections && school.collections.length > 0) {
-      school.collections.forEach(collection => {
-        totalCollectedAmount += collection.amount;
-      });
-    }
-
-    // Calculate the school balance
-    const schoolBalance = totalInvoicedAmount - totalCollectedAmount;
-
-    // Return the school data along with the balance
-    return res.status(200).json({
-      school: {
-        _id: school._id,
-        name: school.name,
-        type: school.type,
-        product: school.product,
-        county: school.county,
-        registrationDate: school.registrationDate,
-        address: school.address,
-        contactEmail: school.contactEmail,
-        contactPhone: school.contactPhone,
-        invoices: school.invoices,
-        collections: school.collections,
-        schoolBalance: schoolBalance,
-      },
-    });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'Internal server error' });
-  }
-}
 
 
 // Controller to get all schools

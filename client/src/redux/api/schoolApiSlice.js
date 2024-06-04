@@ -11,8 +11,8 @@ export const userApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     getSchoolById: builder.query({
-        query: (id) => ({
-          url: `/api/schools/${id}`,
+        query: (schoolId) => ({
+          url: `/api/schools/${schoolId}`,
           method: 'GET',
         }),
       }),

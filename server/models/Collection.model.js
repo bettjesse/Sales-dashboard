@@ -8,9 +8,14 @@ export const CollectionSchema = new Schema({
     ref: 'Invoice',
     required: true,
   },
+  school: {
+    type: Schema.Types.ObjectId,
+    ref: 'School',
+    required: true,
+  },
   collectionNumber: {
     type: String,
-    required: true,
+
   },
   dateOfCollection: {
     type: Date,
@@ -25,6 +30,7 @@ export const CollectionSchema = new Schema({
     type: Number,
     required: true,
   },
+
 });
 
 export default mongoose.model('Collection', CollectionSchema);

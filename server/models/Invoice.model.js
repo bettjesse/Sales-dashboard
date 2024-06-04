@@ -1,5 +1,21 @@
 import mongoose from 'mongoose';
 
+const{Schema} = mongoose
+export const InvoiceItemSchema = new mongoose.Schema({
+  description: {
+    type: String,
+    required: true
+  },
+  quantity: {
+    type: Number,
+    required: true
+  },
+  price: {
+    type: Number,
+    required: true
+  }
+});
+
 export const InvoiceSchema = new mongoose.Schema({
   invoiceNumber: {
     type: String,
@@ -11,13 +27,15 @@ export const InvoiceSchema = new mongoose.Schema({
     ref: 'School',
     required: true
   },
-  items: [{
-    type: String,
-    required: true
+  collections: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Collection',
   }],
+  items: [InvoiceItemSchema],
   creationDate: {
     type: Date,
-    default: Date.now
+    default: Date.now,
+    index: true
   },
   dueDate: {
     type: Date,
@@ -35,6 +53,7 @@ export const InvoiceSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
+
   status: {
     type: String,
     enum: ['Pending', 'Completed'],
