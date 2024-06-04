@@ -2,6 +2,7 @@
 
 Zeraki Sales Management Dashboard is a comprehensive platform designed for sales management teams within Zeraki. It provides tools and features to streamline sales processes, manage invoices, track sales performance, and generate insightful reports.
 
+
 ## Features
 
 1. **Dashboard Overview**: Gain insights into sales performance at a glance with comprehensive dashboard cards and graphs.
@@ -18,6 +19,8 @@ Zeraki Sales Management Dashboard is a comprehensive platform designed for sales
   - React: Built with React for a dynamic and interactive user interface.
   - Tailwind CSS: Utilized for responsive and modern styling, ensuring a sleek and intuitive design.
   - Chart.js: Integrated to visualize sales data with interactive charts and graphs.
+  - Redux : Employed Redux for state management , facilitating the handling of sales data, invoices, and school details.
+
 
 - **Backend**:
   - Node.js: Powered by Node.js for server-side logic and API development.
@@ -26,7 +29,9 @@ Zeraki Sales Management Dashboard is a comprehensive platform designed for sales
 
 ## Functionality
 
-The dashboard currently implements basic CRUD (Create, Read, Update, Delete) operations for managing schools and invoices. This includes functionalities such as creating invoices, viewing school details, and retrieving invoice information.
+The dashboard currently implements basic CRUD (Create, Read, Update, Delete) operations for managing schools and invoices. This includes functionalities such as creating invoices, viewing school details, and retrieving school information.
+
+The project can be further enhanced with more CRUD operations to make it fully functional.
 
 While the project is not 100% functional, it demonstrates the core features of a sales management dashboard and showcases the ability to integrate frontend and backend technologies to build a scalable and efficient application.
 
