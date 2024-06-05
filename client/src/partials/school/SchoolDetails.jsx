@@ -403,6 +403,9 @@ function SchoolDetails() {
 
   return (
     <div className="bg-white dark:bg-slate-800 shadow-lg rounded-sm border border-slate-200 dark:border-slate-700 p-5">
+       {isModalOpen && (
+        <div className="fixed inset-0 bg-black opacity-50 z-40"></div>
+      )}
       <h2 className="font-semibold text-slate-800 dark:text-slate-100 text-2xl mb-4">{name}</h2>
       <div className="mb-4">
         <p><strong>Type:</strong> {type}</p>
@@ -569,13 +572,13 @@ function InvoiceModal({ isEditing, invoice, onClose, onSubmit }) {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Items</label>
+            <label className="block text-sm font-medium text-gray-700">Product Item</label>
             {invoiceData.items.map((item, index) => (
               <div key={index} className="mb-2">
                 <input
                   type="text"
                   name="description"
-                  placeholder="Description"
+                  placeholder="Product name"
                   value={item.description}
                   onChange={(e) => handleItemChange(index, e)}
                   className="mt-1 block w-full border-gray-300 rounded-md mb-1"
