@@ -85,14 +85,31 @@ export async function createInvoice(req, res) {
 
 
 
-// Controller to update an existing invoice
-export async function updateInvoice(req, res) {
+export async function editInvoice(req, res) {
   try {
-    const invoiceId = req.params.id;
-    const updates = req.body;
+    const { id } = req.params; // Extract invoice ID from request parameters
+    const { school, items, dueDate, amount, paidAmount, balance, status } = req.body;
 
-    // Find the invoice by ID and update its details
-    const updatedInvoice = await Invoice.findByIdAndUpdate(invoiceId, updates, { new: true });
+    // Find the invoice by ID
+    const invoice = await Invoice.findById(id);
+
+    if (!invoice) {
+      return res.status(404).send({ error: 'Invoice not found' });
+    }
+
+    // Update invoice fields
+    invoice.school = school;
+    invoice.items = items;
+    invoice.dueDate = dueDate;
+    invoice.amount = amount;
+    invoice.paidAmount = paidAmount;
+    invoice.balance = balance;
+    invoice.status = status;
+
+    // Save the updated invoice
+    const updatedInvoice = await invoice.save();
+
+    // Optionally, update the school's balance or any other related data
 
     return res.status(200).send({
       message: 'Invoice updated successfully',
@@ -103,6 +120,27 @@ export async function updateInvoice(req, res) {
     return res.status(500).send({ error: 'Internal server error' });
   }
 }
+
+
+
+// Controller to update an existing invoice
+// export async function updateInvoice(req, res) {
+//   try {
+//     const invoiceId = req.params.id;
+//     const updates = req.body;
+
+//     // Find the invoice by ID and update its details
+//     const updatedInvoice = await Invoice.findByIdAndUpdate(invoiceId, updates, { new: true });
+
+//     return res.status(200).send({
+//       message: 'Invoice updated successfully',
+//       invoice: updatedInvoice,
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).send({ error: 'Internal server error' });
+//   }
+// }
 
 // Controller to delete an existing invoice
 export async function deleteInvoice(req, res) {
@@ -126,86 +164,6 @@ export async function deleteInvoice(req, res) {
 
 
 
-export async function getSchoolById(req, res) {
-  try {
-    const { schoolId } = req.params;
-
-    console.log(`Looking for school with ID: ${schoolId}`);
-
-    // Find the school by ID
-    const school = await School.findById(schoolId).exec();
-
-    if (!school) {
-      console.error(`School not found with ID: ${schoolId}`);
-      return res.status(404).send({ error: 'School not found' });
-    }
-
-    const schoolDetails = {
-      name: school.name,
-      type: school.type,
-      product: school.product,
-      county: school.county,
-      registrationDate: school.registrationDate,
-      contactInformation: {
-        phone: school.contactInformation.phone,
-        email: school.contactInformation.email,
-      },
-      balance: school.balance,
-    };
-
-    return res.status(200).send(schoolDetails);
-  } catch (error) {
-    console.error('Error fetching school:', error);
-    return res.status(500).send({ error: 'Internal server error' });
-  }
-}
-
-
-
-
-// Controller to create a new school
-
-
-
-
-export async function createSchool(req, res) {
-  try {
-    const {
-      name,
-      type,
-      product,
-      county,
-      registrationDate,
-      address,
-      contactInformation: { email, phone }
-    } = req.body;
-
-    // Create a new school instance
-    const school = new School({
-      name,
-      type,
-      product,
-      county,
-      registrationDate,
-      contactInformation: {
-        email,
-        phone,
-      },
-      address,
-    });
-
-    // Save the new school to the database
-    await school.save();
-
-    return res.status(201).send({
-      message: 'School created successfully',
-      school,
-    });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).send({ error: 'Internal server error' });
-  }
-}
 
 
 
@@ -216,19 +174,8 @@ export async function createSchool(req, res) {
 
 
 
-// Controller to get all schools
-export async function getAllSchools(req, res) {
-  try {
-    // Retrieve all schools from the database
-    const schools = await School.find();
 
-    // Send the list of schools as a response
-    return res.status(200).json(schools);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).send({ error: 'Internal server error' });
-  }
-}
+
 
 
 
