@@ -15,6 +15,7 @@ import SchoolDetails from './partials/school/SchoolDetails';
 import SchoolDetail from './pages/SchoolDetail';
 import InvoicePage from './pages/InvoicesPage';
 import Collections from './pages/Collections';
+import { ToastContainer } from 'react-toastify';
 
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
         <Route exact path="/collections" element={<Collections/>} />
 
       </Routes>
+      <ToastContainer/>
     </>
   );
 }
