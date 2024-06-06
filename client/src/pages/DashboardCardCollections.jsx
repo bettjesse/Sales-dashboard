@@ -1,25 +1,35 @@
-import React, { useState } from 'react';
-
+import React, { useState, useEffect } from 'react';
+import { useAllCollectionsQuery, useUpdateCollectionStatusMutation } from '../redux/api/collectionApiSlice';
+import { collectionStatusUpdated } from '../redux/api/collections';
+import { useDispatch } from 'react-redux';
+import toast from 'react-hot-toast';
 function DashboardCardCollections() {
-  const [collections, setCollections] = useState([
-    { id: 1, school: 'Greenwood High', invoiceNumber: 'INV001', collectionNumber: 'COL001', date: '2024-06-01', status: 'Valid', amount: 500 },
-    { id: 2, school: 'Sunnydale Elementary', invoiceNumber: 'INV002', collectionNumber: 'COL002', date: '2024-06-02', status: 'Valid', amount: 300 },
-    { id: 3, school: 'Riverside Middle', invoiceNumber: 'INV003', collectionNumber: 'COL003', date: '2024-06-03', status: 'Valid', amount: 200 },
-    { id: 4, school: 'Hillcrest Academy', invoiceNumber: 'INV004', collectionNumber: 'COL004', date: '2024-06-04', status: 'Valid', amount: 700 },
-    { id: 5, school: 'Lakeside School', invoiceNumber: 'INV005', collectionNumber: 'COL005', date: '2024-06-05', status: 'Valid', amount: 400 },
-  ]);
+  const { data: collections = [], error, isLoading, refetch } = useAllCollectionsQuery();
+  const [updateStatus, { isLoading: isUpdating }] = useUpdateCollectionStatusMutation();
+  const dispatch = useDispatch();
 
-  const handleStatusChange = (id, newStatus) => {
-    setCollections(
-      collections.map((collection) =>
-        collection.id === id ? { ...collection, status: newStatus } : collection
-      )
-    );
+  const handleStatusChange = async (id, newStatus) => {
+    try {
+      // Call the mutation to update the collection status
+      const response =  await updateStatus({ id, status: newStatus });
+
+      dispatch(collectionStatusUpdated({ id,  status: response.data.collection.status }));
+      console.log("UPDATES STATUS",response.data.collection.status)
+      refetch()
+      toast.success("Collections updated succesfully")
+    } catch (error) {
+      toast.error('Error updating collection status:', );
+    }
   };
 
-  const markBounced = (id) => {
-    handleStatusChange(id, 'Bounced');
-  };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error fetching collections</div>;
+  }
 
   return (
     <div className="col-span-full xl:col-span-8 bg-white dark:bg-slate-800 shadow-lg rounded-sm border border-slate-200 dark:border-slate-700">
@@ -59,18 +69,18 @@ function DashboardCardCollections() {
             {/* Table body */}
             <tbody className="text-sm font-medium divide-y divide-slate-100 dark:divide-slate-700">
               {collections.map((collection) => (
-                <tr key={collection.id}>
+                <tr key={collection._id}>
                   <td className="p-2">
-                    <div className="text-slate-800 dark:text-slate-100">{collection.school}</div>
+                    <div className="text-slate-800 dark:text-slate-100">{collection.school.name}</div>
                   </td>
                   <td className="p-2">
-                    <div className="text-slate-800 dark:text-slate-100">{collection.invoiceNumber}</div>
+                    <div className="text-slate-800 dark:text-slate-100">{collection.invoice.invoiceNumber}</div>
                   </td>
                   <td className="p-2">
                     <div className="text-slate-800 dark:text-slate-100">{collection.collectionNumber}</div>
                   </td>
                   <td className="p-2">
-                    <div className="text-slate-800 dark:text-slate-100">{collection.date}</div>
+                    <div className="text-slate-800 dark:text-slate-100">{new Date(collection.dateOfCollection).toLocaleDateString()}</div>
                   </td>
                   <td className="p-2">
                     <div className={`font-semibold ${collection.status === 'Valid' ? 'text-emerald-500' : 'text-red-500'}`}>{collection.status}</div>
@@ -82,17 +92,18 @@ function DashboardCardCollections() {
                     <div className="text-center">
                       <button
                         className="text-sm text-white bg-emerald-500 hover:bg-emerald-600 rounded px-2 md:py-1 py-0 m-2"
-                        onClick={() => handleStatusChange(collection.id, 'Valid')}
+                        onClick={() => handleStatusChange(collection._id, 'Valid')}
+                        disabled={isUpdating} // Disable the button while updating
                       >
-                        Mark Valid
+                        {isUpdating ? 'Updating...' : 'Mark Valid'}
                       </button>
                       <button
                         className="text-sm text-white bg-red-500 hover:bg-red-600 rounded px-2 md:py-1 py-0 m-2"
-                        onClick={() => markBounced(collection.id)}
+                        onClick={() => handleStatusChange(collection._id, 'Bounced')}
+                        disabled={isUpdating} // Disable the button while updating
                       >
-                        Mark Bounced
-                        </button>
-                      
+                        {isUpdating ? 'Updating...' : 'Mark Bounced'}
+                      </button>
                     </div>
                   </td>
                 </tr>

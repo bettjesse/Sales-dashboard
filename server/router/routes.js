@@ -14,13 +14,16 @@ router.route("/new-school").post(schoolController.createSchool)
 router.route("/invoices/:schoolId").get(controller.listAllInvoices)
 router.route("/invoice/:id").get(controller.getInvoice)
 router.route("/collections").post(controller.addCollectionToInvoice)
-router.route("/collections/:id").put(controller.updateCollectionStatus)
+
+
+router.route("/collections/:id/status").put(collectionController.updateCollectionStatus)
 
 router.route("/schools").get(schoolController.getAllSchools)
 router.route("/schools/:schoolId").get(schoolController.getSchoolById)
 router.route("/all-invoice").get(controller.allInvoices)
 router.route("/create-collection").post(collectionController.createCollection)
 router.route("/schools/:schoolId/collections").get(collectionController.listCollectionsBySchool)
+router.route("/collections").get(collectionController.listCollections)
 router.route("/invoices/:id").put(controller.editInvoice)
 
 
