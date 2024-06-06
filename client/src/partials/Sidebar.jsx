@@ -121,7 +121,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                     <React.Fragment>
                       <a
                         href="#0"
-                        className={`block text-slate-200 truncate transition duration-150 ${
+                        className={`block text-sm text-slate-200 truncate transition duration-150 ${
                           pathname === "/" || pathname.includes("dashboard")
                             ? "hover:text-slate-200"
                             : "hover:text-white"
@@ -133,6 +133,8 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                             : setSidebarExpanded(true);
                         }}
                       >
+                        zeraki
+
                         <div className="flex items-center justify-between">
                           <div className="flex items-center">
                             <p
@@ -149,15 +151,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                                 }`}
                                
                               />
-                              <path
-                                className={`fill-current ${
-                                  pathname === "/" ||
-                                  pathname.includes("dashboard")
-                                    ? "text-indigo-600"
-                                    : "text-white"
-                                }`}
-                                d="M12 3c-4.963 0-9 4.037-9 9s4.037 9 9 9 9-4.037 9-9-4.037-9-9-9z"
-                              />
+                             
                               <path
                                 className={`fill-current ${
                                   pathname === "/" ||
