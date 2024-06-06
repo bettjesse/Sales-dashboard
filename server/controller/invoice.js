@@ -7,7 +7,7 @@ import mongoose from 'mongoose';
 export async function allInvoices(req, res) {
   try {
     // Retrieve all invoices
-    const invoices = await Invoice.find();
+    const invoices = await Invoice.find().populate('school');
 
     // Send the list of invoices as a response
     return res.status(200).json(invoices);
@@ -31,7 +31,6 @@ export async function listAllInvoices(req, res) {
   }
 }
 
-// Controller to create a new invoice
 
 
 
@@ -65,11 +64,16 @@ export async function createInvoice(req, res) {
     // Save the new invoice to the database
     const savedInvoice = await invoice.save();
 
-    // Update the school to include the new invoice ID and recalculate balance
-    const schoolDoc = await School.findById(school);
-    schoolDoc.invoices.push(savedInvoice._id);
-    schoolDoc.balance += amount; // Increase the balance by the invoice amount
-    await schoolDoc.save();
+  
+
+const schoolDoc = await School.findById(school);
+schoolDoc.invoices.push(savedInvoice._id);
+// Calculate the new balance by summing up all invoice amounts
+const invoices = await Invoice.find({ school: school });
+const totalAmount = invoices.reduce((acc, invoice) => acc + invoice.amount, 0);
+schoolDoc.balance = totalAmount;
+await schoolDoc.save();
+
 
     return res.status(201).send({
       message: 'Invoice created successfully',
@@ -109,7 +113,6 @@ export async function editInvoice(req, res) {
     // Save the updated invoice
     const updatedInvoice = await invoice.save();
 
-    // Optionally, update the school's balance or any other related data
 
     return res.status(200).send({
       message: 'Invoice updated successfully',
@@ -123,24 +126,7 @@ export async function editInvoice(req, res) {
 
 
 
-// Controller to update an existing invoice
-// export async function updateInvoice(req, res) {
-//   try {
-//     const invoiceId = req.params.id;
-//     const updates = req.body;
 
-//     // Find the invoice by ID and update its details
-//     const updatedInvoice = await Invoice.findByIdAndUpdate(invoiceId, updates, { new: true });
-
-//     return res.status(200).send({
-//       message: 'Invoice updated successfully',
-//       invoice: updatedInvoice,
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(500).send({ error: 'Internal server error' });
-//   }
-// }
 
 // Controller to delete an existing invoice
 export async function deleteInvoice(req, res) {

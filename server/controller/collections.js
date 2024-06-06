@@ -48,7 +48,7 @@ export async function createCollection(req, res) {
       return res.status(404).send({ error: 'Invoice not found' });
     }
 
-    // Ensure amount is a number
+
     const amountNumber = parseFloat(amount);
     if (isNaN(amountNumber)) {
       return res.status(400).send({ error: 'Invalid amount' });
@@ -89,7 +89,7 @@ export async function createCollection(req, res) {
     // Update the school to include the new collection ID and recalculate balance
     const schoolDoc = await School.findById(school);
     schoolDoc.collections.push(savedCollection._id);
-    schoolDoc.balance -= amountNumber; // Decrease the balance by the collection amount
+    schoolDoc.balance -= amountNumber; 
     await schoolDoc.save();
 
     return res.status(201).send({
@@ -116,7 +116,7 @@ export async function updateCollectionStatus(req, res) {
     const updatedCollection = await Collection.findByIdAndUpdate(
       id,
       { status },
-      { new: true } // Return the updated collection after the update
+      { new: true }
     );
 
     if (!updatedCollection) {

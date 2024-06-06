@@ -10,6 +10,13 @@ export const userApiSlice = apiSlice.injectEndpoints({
        
       }),
     }),
+    updateInvoice: builder.mutation({
+      query: ({ id, ...data }) => ({
+        url: `/api/invoices/${id}`,
+        method: 'PUT',
+        body: data,
+      }),
+    }),
     allnvoice: builder.query({
       query: () => ({
         url: "/api/all-invoice",
@@ -17,11 +24,19 @@ export const userApiSlice = apiSlice.injectEndpoints({
        
        
       }),
+      
     }),
+    deleteInvoice: builder.mutation({
+      query: (id) => ({
+        url: `/api/invoices/${id}`,
+        method: 'DELETE',
+      }),
+    }),
+    
 })
 })
 export const {
-  useCreateInvoiceMutation, useAllnvoiceQuery
+  useCreateInvoiceMutation,  useUpdateInvoiceMutation, useAllnvoiceQuery, useDeleteInvoiceMutation
  
-  
+
   } = userApiSlice;

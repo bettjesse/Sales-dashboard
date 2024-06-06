@@ -44,8 +44,6 @@ export async function getSchoolById(req, res) {
   // Controller to create a new school
 
 
-
-
 export async function createSchool(req, res) {
     try {
       const {

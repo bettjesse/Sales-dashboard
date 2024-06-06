@@ -39,7 +39,7 @@ function App() {
         <Route exact path="/collections" element={<Collections/>} />
 
       </Routes>
-      <ToastContainer/>
+    
     </>
   );
 }

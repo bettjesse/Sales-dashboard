@@ -44,7 +44,14 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: { status }, 
       }),
     }),
+    createCollection: builder.mutation({
+      query: (data) => ({
+        url: `/api/create-collection`,
+        method: 'Post',
+        body: data, 
+      }),
+    }),
   }),
 });
 
-export const { useAllCollectionsQuery, useUpdateCollectionStatusMutation } = userApiSlice;
+export const { useAllCollectionsQuery, useUpdateCollectionStatusMutation, useCreateCollectionMutation } = userApiSlice;

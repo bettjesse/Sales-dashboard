@@ -25,6 +25,7 @@ router.route("/create-collection").post(collectionController.createCollection)
 router.route("/schools/:schoolId/collections").get(collectionController.listCollectionsBySchool)
 router.route("/collections").get(collectionController.listCollections)
 router.route("/invoices/:id").put(controller.editInvoice)
+router.route("/invoices/:id").delete(controller.deleteInvoice)
 
 
 export default router
