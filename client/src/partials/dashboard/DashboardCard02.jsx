@@ -25,7 +25,7 @@ function DashboardCard02() {
                 className="font-medium text-sm text-slate-600 dark:text-slate-300 hover:text-slate-800 dark:hover:text-slate-200 flex py-1 px-3"
                 to="#0"
               >
-             Zeraki Analytics {  zerakiAnalytics}
+              Analytics {  zerakiAnalytics}
               </Link>
             </li>
             <li>
@@ -33,7 +33,7 @@ function DashboardCard02() {
                 className="font-medium text-sm text-slate-600 dark:text-slate-300 hover:text-slate-800 dark:hover:text-slate-200 flex py-1 px-3"
                 to="#0"
               >
-               Zeraki Finance {zerakiFinance}
+                Finance {zerakiFinance}
               </Link>
             </li>
             <li>
@@ -41,7 +41,7 @@ function DashboardCard02() {
                 className="font-medium text-sm text-slate-600 dark:text-slate-300 hover:text-slate-800 dark:hover:text-slate-200 flex py-1 px-3"
                 to="#0"
               >
-           Zeraki Timetable {zerakiTimetable}
+            Timetable {zerakiTimetable}
               </Link>
             </li>
           
@@ -60,7 +60,7 @@ function DashboardCard02() {
          
         </div>
       </div>
-      {/* Chart built with Chart.js 3 */}
+      
      
     </div>
   );

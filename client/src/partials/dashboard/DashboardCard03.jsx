@@ -23,7 +23,7 @@ function DashboardCard03() {
                 className="font-medium text-sm text-slate-600 dark:text-slate-300 hover:text-slate-800 dark:hover:text-slate-200 flex py-1 px-3"
                 to="#0"
               >
-              Zeraki Analytics
+              Analytics
               </Link>
             </li>
             <li>
@@ -31,7 +31,7 @@ function DashboardCard03() {
                 className="font-medium text-sm text-slate-600 dark:text-slate-300 hover:text-slate-800 dark:hover:text-slate-200 flex py-1 px-3"
                 to="#0"
               >
-                Zeraki Finance
+                 Finance
               </Link>
             </li>
             <li>
@@ -39,7 +39,7 @@ function DashboardCard03() {
                 className="font-medium text-sm text-slate-600 dark:text-slate-300 hover:text-slate-800 dark:hover:text-slate-200 flex py-1 px-3"
                 to="#0"
               >
-               Zeraki Timetable
+           Timetable
               </Link>
             </li>
            
