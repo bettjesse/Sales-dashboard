@@ -10,7 +10,7 @@ function ZerakiTimetableBar() {
     labels: ['Primary', 'Secondary', 'IGCSE'],
     datasets: [
       {
-        label: 'Zeraki Timetable',
+        label: 'Timetable',
         data: [1200, 2300, 800], // Example data for each school type
         backgroundColor: [
           tailwindConfig().theme.colors.blue[400],

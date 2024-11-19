@@ -10,7 +10,7 @@ function  ZerakiFinanceBar() {
     labels: ['Primary', 'Secondary', 'IGCSE'],
     datasets: [
       {
-        label: 'Zeraki Finance',
+        label: ' Finance',
         data: [4000, 1300, 2181], // Example data for each school type
         backgroundColor: [
           tailwindConfig().theme.colors.blue[400],
