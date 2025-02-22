@@ -22,6 +22,7 @@ import ZerakiAnalyticsBar from "../partials/dashboard/ZerakiAnalyticsBar";
 import ZerakiFinanceBar from "../partials/dashboard/ZerakiFinanceBar";
 import ZerakiTimetable from "../partials/dashboard/ZerakiTimetable";
 import ZerakiTimetableBar from "../partials/dashboard/ZerakiTimetableBar";
+import BannerNotification from "../components/BannerNotification";
 
 
 function Dashboard() {
@@ -35,6 +36,7 @@ function Dashboard() {
       {/* Content area */}
       <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
         {/*  Site header */}
+        <BannerNotification />
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
         <main>
